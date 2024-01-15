@@ -1,6 +1,5 @@
-import 'dart:math';
-
 import 'package:collection/collection.dart';
+import 'package:fake_fake_ip/api.dart';
 import 'package:fake_fake_ip/parts.dart';
 import 'package:fake_fake_ip/shared.dart';
 import 'package:jaspr/html.dart';
@@ -47,39 +46,23 @@ class AppState extends State<App> {
       div([
         SimpleButtonComponent(
             label: "Generate IPv4",
-            onPressed: () => setState(() {
-                  for (int i = 0; i < 10; i++) {
-                    ips.add("amogus${Random.secure().nextInt(30)}");
-                  }
-                }),
-            style: SimpleButtonComponent.defaultStyle()),
-        SimpleButtonComponent(
-            label: "Generate IPv4",
-            onPressed: () => setState(() {
-                  for (int i = 0; i < 10; i++) {
-                    ips.add("amogus${Random.secure().nextInt(30)}");
-                  }
-                }),
+            onPressed: () => Api.ipv4().then((value) => setState(() {
+                  ips.clear();
+                  ips.setAll(0, value);
+                })),
             style: SimpleButtonComponent.defaultStyle()),
         SimpleButtonComponent(
             label: "Generate IPv6",
-            onPressed: () => setState(() {
-                  for (int i = 0; i < 10; i++) {
-                    ips.add("amogus${Random.secure().nextInt(30)}");
-                  }
-                }),
+            onPressed: () => Api.ipv6().then((value) => setState(() {
+                  ips.clear();
+                  ips.setAll(0, value);
+                })),
             style: (
               bg: Config.primary2,
               fg: Config.bg,
               onClick: Config.primary2Darker2,
               onHover: Config.primary2Darker1
             )),
-        SimpleButtonComponent(
-            label: "Clear",
-            onPressed: () => setState(() {
-                  ips.clear();
-                }),
-            style: SimpleButtonComponent.defaultStyle()),
         SimpleButtonComponent(
             label: "Copy",
             onPressed: () => {/* need impl */},
@@ -91,7 +74,7 @@ class AppState extends State<App> {
             )),
       ],
           styles: Styles.combine([
-            Styles.raw({"gap": "0.2em"}),
+            Styles.raw({"gap": "0.4em"}),
             Styles.flexbox(
                 direction: FlexDirection.row,
                 alignItems: AlignItems.center,
@@ -146,8 +129,7 @@ class IPDisplay extends StatelessComponent {
     }
     yield div([
       p([
-        Text(
-            "Generated IPs ${ipsGet.isEmpty ? "" : ipsGet.length}: ")
+        Text("Generated IPs ${ipsGet.isEmpty ? "" : ipsGet.length}: ")
       ],
           styles: Styles.combine([
             Styles.text(
